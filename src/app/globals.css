@@ -1,26 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0a0f1f;
+    --background-2: #0f172a;
+    --card: #111a2c;
+
+    --primary: #3b82f6;
+    --primary-light: #60a5fa;
+    --primary-glow: #4cc9f0;
+
+    --secondary: #7c3aed;
+    --secondary-dark: #4338ca;
+
+    --text: #e2e8f0;
+    --text-soft: #94a3b8;
+    --text-highlight: #38bdf8;
+
+    --gradient: linear-gradient(135deg, #3b82f6, #4cc9f0, #7c3aed);
+
+    --glow-1: 0 0 20px rgba(59, 130, 246, 0.5);
+    --glow-2: 0 0 35px rgba(76, 201, 240, 0.6);
+    --glow-3: 0 0 45px rgba(124, 58, 237, 0.4);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.3), transparent 60%),
+        radial-gradient(circle at 90% 40%, rgba(124, 58, 237, 0.35), transparent 70%),
+        radial-gradient(circle at 70% 90%, rgba(76, 201, 240, 0.25), transparent 80%),
+        #0d1117;
+
+      background-attachment: fixed;
+      color: var(--text);
+    
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background-2);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary), var(--secondary));
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--primary-light), var(--secondary));
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Animations */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    box-shadow: var(--glow-1);
+  }
+
+  50% {
+    box-shadow: var(--glow-2);
+  }
+}
+
+/* Utility Classes */
+@layer utilities {
+  .glassmorphism {
+    background: rgba(17, 26, 44, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+
+  .text-gradient {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
