@@ -267,7 +267,7 @@ export default function Contact() {
                             <motion.button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full px-8 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full px-8 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                 style={{
                                     background: "var(--gradient)",
                                     color: "white",
