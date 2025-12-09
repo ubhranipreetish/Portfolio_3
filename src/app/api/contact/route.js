@@ -1,9 +1,12 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Force this route to be dynamic (not evaluated at build time)
+export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
+  // Initialize Resend at request time, not build time
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const { name, email, subject, message } = await request.json();
 
