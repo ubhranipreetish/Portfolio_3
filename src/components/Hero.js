@@ -100,7 +100,7 @@ export default function Hero() {
     ];
 
     return (
-        <section className="relative min-h-screen flex items-center py-20 px-6 md:px-12">
+        <section id="home" className="relative min-h-screen flex items-center py-20 px-6 md:px-12">
             <div className="max-w-7xl w-full mx-auto">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Left Content */}
