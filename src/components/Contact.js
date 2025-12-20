@@ -138,7 +138,7 @@ export default function Contact() {
                             transition={{ duration: 0.6 }}
                         >
                             <img
-                                src="/your-avatar.png"
+                                src="/images/avatar.png"
                                 alt="Avatar"
                                 className="w-full h-full object-cover"
                             />

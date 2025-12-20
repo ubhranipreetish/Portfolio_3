@@ -9,7 +9,7 @@ export const userData = {
     companyRole: "UI Consultant",
 
     // Hero Description
-    description: "I'm a Full Stack Web Developer, from Delhi. Currently a 2nd-year B.Tech student specializing in Computer Science & Artificial Intelligence.",
+    description: "I'm a Full Stack Web Developer, from Delhi. Currently a 2nd year B.Tech student specializing in Computer Science & Artificial Intelligence.",
 
     // Navigation Links
     navLinks: [
@@ -34,7 +34,7 @@ export const userData = {
     },
 
     // Profile Image 
-    profileImage: "/profile.png", 
+    profileImage: "/images/pic.png", 
 
     // About Section
     about: {

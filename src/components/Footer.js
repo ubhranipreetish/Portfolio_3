@@ -15,10 +15,6 @@ export default function Footer() {
         instagram: Instagram,
     };
 
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
     return (
         <footer className="relative border-t py-12 px-6" style={{ borderColor: 'rgba(59, 130, 246, 0.2)' }}>
             <div className="max-w-7xl mx-auto">
@@ -36,9 +32,11 @@ export default function Footer() {
                                 className="w-10 h-10 rounded-lg flex items-center justify-center shadow-lg"
                                 style={{ background: 'var(--gradient)' }}
                             >
-                                <span className="text-white font-bold text-lg">
-                                    {name.charAt(0)}
-                                </span>
+                                <img
+                                    src="/images/logo2.png"
+                                    alt="Logo"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <h3 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
                                 {name}

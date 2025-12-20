@@ -279,14 +279,13 @@ export default function Hero() {
                                         />
                                     </svg>
                                 </div>
-                                {/* Uncomment when you add your profile image to /public/profile.jpg */}
-                                {/* <Image
-                  src={userData.profileImage}
-                  alt={userData.name}
-                  fill
-                  className="object-cover"
-                  priority
-                /> */}
+                                <Image
+                                    src={userData.profileImage}
+                                    alt={userData.name}
+                                    fill
+                                    className="object-cover"
+                                    priority
+                                />
                             </motion.div>
                         </div>
                     </motion.div>
