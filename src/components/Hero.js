@@ -149,6 +149,7 @@ export default function Hero() {
                         >
                             <motion.a
                                 href={userData.cta.primary.href}
+                                download
                                 whileHover={{ scale: 1.05, boxShadow: "var(--glow-1)" }}
                                 whileTap={{ scale: 0.95 }}
                                 className="px-8 py-4 text-white font-semibold rounded-full shadow-lg transition-all duration-300"

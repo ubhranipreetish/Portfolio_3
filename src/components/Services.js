@@ -73,9 +73,16 @@ const ServiceCard = ({ service, index }) => {
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-soft)' }}>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--text-soft)' }}>
                     {service.description}
                 </p>
+
+                {/* Outcome */}
+                {service.outcome && (
+                    <p className="text-sm font-medium leading-relaxed mb-6 italic" style={{ color: 'var(--primary-glow)' }}>
+                        {service.outcome}
+                    </p>
+                )}
 
                 {/* Features List */}
                 <div className="space-y-2">
@@ -146,7 +153,7 @@ export default function Services() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    
+
 
                     <h2 className="text-5xl md:text-6xl font-bold mb-4">
                         <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'var(--gradient)' }}>

@@ -25,7 +25,7 @@ export const userData = {
     cta: {
         primary: {
             text: "Download Resume",
-            href: "#download-cv",
+            href: "/resume.pdf",
         },
         secondary: {
             text: "See my work",
@@ -34,11 +34,11 @@ export const userData = {
     },
 
     // Profile Image 
-    profileImage: "/images/pic.png", 
+    profileImage: "/images/pic.png",
 
     // About Section
     about: {
-        story: "I'm a passionate Full Stack Developer who loves turning ideas into working products. With a blend of creativity and technical expertise, I craft experiences that are both beautiful and functional.",
+        story: "I'm a passionate Full Stack Developer with a blend of creativity and technical expertise. I craft experiences that are both beautiful and functional, focusing on delivering solutions that make a real impact.",
         mission: "I love turning ideas into working products.",
 
         // Tech Stack with icons
@@ -170,6 +170,7 @@ export const userData = {
                 id: 1,
                 title: "Website Development",
                 description: "Full-stack web applications built with modern frameworks like React, Next.js, and Node.js. Responsive, fast, and scalable solutions.",
+                outcome: "Deliver high-performance web solutions that drive engagement and support your business growth.",
                 icon: "code",
                 features: ["Responsive Design", "SEO Optimized", "Fast Performance", "Scalable Architecture"]
             },
@@ -177,6 +178,7 @@ export const userData = {
                 id: 2,
                 title: "UI Implementation",
                 description: "Pixel-perfect implementation of designs with attention to detail. Transform Figma designs into beautiful, interactive interfaces.",
+                outcome: "Create engaging user experiences that delight your audience and increase conversion rates.",
                 icon: "palette",
                 features: ["Figma to Code", "Interactive Animations", "Cross-browser Compatible", "Accessibility First"]
             },
@@ -184,6 +186,7 @@ export const userData = {
                 id: 3,
                 title: "API Integration",
                 description: "Seamless integration of third-party APIs and services. RESTful and GraphQL APIs with proper error handling and authentication.",
+                outcome: "Connect your systems effortlessly, enabling smooth data flow and enhanced functionality.",
                 icon: "plug",
                 features: ["REST APIs", "GraphQL", "Authentication", "Real-time Data"]
             },
@@ -191,6 +194,7 @@ export const userData = {
                 id: 4,
                 title: "Bug Fixing",
                 description: "Quick and efficient debugging and bug fixes. Identify root causes and implement robust solutions.",
+                outcome: "Maintain code quality and reliability, ensuring your application runs smoothly without disruptions.",
                 icon: "wrench",
                 features: ["Root Cause Analysis", "Performance Issues", "Security Patches", "Code Review"]
             },
@@ -198,6 +202,7 @@ export const userData = {
                 id: 5,
                 title: "Performance Optimization",
                 description: "Optimize your applications for speed and efficiency. Database optimization, code splitting, and caching strategies.",
+                outcome: "Improve app load time and responsiveness for better user experience and retention.",
                 icon: "gauge",
                 features: ["Speed Optimization", "Database Tuning", "Code Splitting", "Caching Strategies"]
             }
