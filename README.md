@@ -6,7 +6,7 @@ dark, editorial, motion-driven single page. The design language is the in-house
 chartreuse accent, with an oscilloscope / instrument motif running through the
 interactive sections.
 
-**Live:** _add your Vercel URL here_
+**Live:** https://preetish-ubhrani-portfolio.vercel.app
 
 ---
 
