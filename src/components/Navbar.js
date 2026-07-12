@@ -1,124 +1,175 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import { userData } from "@/config/userData";
-import { useState, useEffect } from "react";
 
 export default function Navbar() {
-    const [activeSection, setActiveSection] = useState("home");
+    const [scrolled, setScrolled] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [active, setActive] = useState(null);
+    const progressRef = useRef(null);
 
     useEffect(() => {
-        const observerOptions = {
-            root: null,
-            rootMargin: '-50% 0px -50% 0px',
-            threshold: 0
+        const sections = userData.nav
+            .map((item) => ({ href: item.href, el: document.querySelector(item.href) }))
+            .filter((s) => s.el);
+
+        const onScroll = () => {
+            setScrolled(window.scrollY > 24);
+
+            // Page progress — written straight to the style so scrolling
+            // never queues React renders
+            if (progressRef.current) {
+                const max = document.documentElement.scrollHeight - window.innerHeight;
+                const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+                progressRef.current.style.transform = `scaleX(${p})`;
+            }
+
+            // Active section — the last one whose top has crossed the upper
+            // third of the viewport
+            const line = window.innerHeight * 0.38;
+            let current = null;
+            for (const s of sections) {
+                if (s.el.getBoundingClientRect().top <= line) current = s.href;
+            }
+            setActive(current);
         };
-
-        const observerCallback = (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-        // Observe all sections
-        const sections = userData.navLinks.map(link =>
-            document.querySelector(link.href)
-        ).filter(Boolean);
-
-        sections.forEach(section => observer.observe(section));
-
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
         return () => {
-            sections.forEach(section => observer.unobserve(section));
+            window.removeEventListener("scroll", onScroll);
+            window.removeEventListener("resize", onScroll);
         };
     }, []);
 
     return (
-        <motion.nav
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="fixed top-0 left-0 right-0 z-50 px-6 py-6"
+        <header
+            className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+                scrolled
+                    ? "border-b border-line bg-bg/80 backdrop-blur-md"
+                    : "border-b border-transparent bg-transparent"
+            }`}
         >
-            <div className="max-w-7xl mx-auto">
-                <div className="flex items-center justify-between bg-[var(--card)]/80 backdrop-blur-md rounded-3xl px-8 py-4 border border-[var(--primary)]/20 shadow-lg shadow-[var(--primary)]/10">
-                    {/* Logo */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.2, duration: 0.6 }}
-                        className="flex items-center gap-3"
-                    >
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-lg overflow-hidden">
-                            <img
-                                src="/images/logo2.png"
-                                alt="Logo"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <span className="font-semibold text-xl" style={{ color: 'var(--text)' }}>
-                            {userData.name}
-                        </span>
-                    </motion.div>
+            <nav
+                aria-label="Primary"
+                className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"
+            >
+                <a
+                    href="#top"
+                    className="font-mono text-sm tracking-tight text-ink"
+                    aria-label="Back to top"
+                >
+                    preetish<span className="text-accent">.</span>ubhrani
+                </a>
 
-                    {/* Navigation Links */}
-                    <motion.ul
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4, duration: 0.6 }}
-                        className="hidden md:flex items-center gap-8"
+                {/* Desktop */}
+                <div className="hidden items-center gap-8 md:flex">
+                    {userData.nav.map((item) => {
+                        const isActive = active === item.href;
+                        return (
+                            <a
+                                key={item.name}
+                                href={item.href}
+                                aria-current={isActive ? "true" : undefined}
+                                className={`relative pb-0.5 text-sm transition-colors ${
+                                    isActive
+                                        ? "text-ink"
+                                        : "link-sweep text-muted hover:text-ink"
+                                }`}
+                            >
+                                {item.name}
+                                {isActive && (
+                                    <motion.span
+                                        layoutId="nav-active"
+                                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                                        className="absolute -bottom-0.5 left-0 right-0 h-px bg-accent"
+                                    />
+                                )}
+                            </a>
+                        );
+                    })}
+                    <a
+                        href={userData.resume}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-full border border-line-strong px-4 py-1.5 font-mono text-xs text-ink transition-colors hover:border-accent hover:text-accent"
                     >
-                        {userData.navLinks.map((link, index) => {
-                            const sectionId = link.href.replace('#', '');
-                            const isActive = activeSection === sectionId;
-
-                            return (
-                                <motion.li
-                                    key={link.name}
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
-                                >
-                                    <a
-                                        href={link.href}
-                                        className={`transition-colors duration-300 font-medium ${isActive
-                                            ? "text-[var(--primary-glow)]"
-                                            : "text-[var(--text-soft)] hover:text-[var(--text)]"
-                                            }`}
-                                    >
-                                        {link.name}
-                                    </a>
-                                </motion.li>
-                            );
-                        })}
-                    </motion.ul>
-
-                    {/* Mobile Menu Button */}
-                    <motion.button
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6, duration: 0.6 }}
-                        className="md:hidden text-white p-2"
-                    >
-                        <svg
-                            className="w-6 h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 6h16M4 12h16M4 18h16"
-                            />
-                        </svg>
-                    </motion.button>
+                        Resume ↗
+                    </a>
                 </div>
-            </div>
-        </motion.nav>
+
+                {/* Mobile toggle */}
+                <button
+                    type="button"
+                    onClick={() => setOpen((v) => !v)}
+                    className="text-ink md:hidden"
+                    aria-expanded={open}
+                    aria-controls="mobile-menu"
+                    aria-label={open ? "Close menu" : "Open menu"}
+                >
+                    {open ? <X size={22} /> : <Menu size={22} />}
+                </button>
+            </nav>
+
+            {/* Page progress — hairline under the nav */}
+            <span
+                ref={progressRef}
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-[-1px] block h-px origin-left bg-accent"
+                style={{ transform: "scaleX(0)" }}
+            />
+
+            <AnimatePresence>
+                {open && (
+                    <>
+                        {/* Backdrop — dims the page so the drawer reads as a layer */}
+                        <motion.button
+                            type="button"
+                            aria-label="Close menu"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            onClick={() => setOpen(false)}
+                            className="fixed inset-0 -z-10 h-screen w-screen cursor-default bg-bg/70 backdrop-blur-sm md:hidden"
+                        />
+                        <motion.div
+                            id="mobile-menu"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="overflow-hidden border-b border-line bg-bg/95 backdrop-blur-md md:hidden"
+                        >
+                            <div className="flex flex-col gap-1 px-6 pb-6 pt-2">
+                                {userData.nav.map((item) => (
+                                    <a
+                                        key={item.name}
+                                        href={item.href}
+                                        onClick={() => setOpen(false)}
+                                        className={`py-2.5 text-lg transition-colors hover:text-ink ${
+                                            active === item.href ? "text-accent" : "text-muted"
+                                        }`}
+                                    >
+                                        {item.name}
+                                    </a>
+                                ))}
+                                <a
+                                    href={userData.resume}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-3 w-fit rounded-full border border-line-strong px-5 py-2 font-mono text-xs text-ink"
+                                >
+                                    Resume ↗
+                                </a>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+        </header>
     );
 }

@@ -1,332 +1,145 @@
 "use client";
 
-import { userData } from "@/config/userData";
-import { motion } from "framer-motion";
-import { Mail, MapPin, Phone, Send, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
+import { ArrowUpRight, Loader2 } from "lucide-react";
+import { userData } from "@/config/userData";
+import SectionIntro from "./SectionIntro";
+import Reveal from "./Reveal";
 
-const InfoCard = ({ icon: Icon, label, value }) => {
-    return (
-        <motion.div
-            className="flex items-start gap-4 p-4 rounded-xl border"
-            style={{
-                backgroundColor: "rgba(17, 26, 44, 0.4)",
-                borderColor: "rgba(59, 130, 246, 0.2)",
-            }}
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            whileHover={{
-                borderColor: "var(--primary-glow)",
-                backgroundColor: "rgba(17, 26, 44, 0.6)",
-            }}
-        >
-            <div className="p-2 rounded-lg" style={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}>
-                <Icon className="w-5 h-5" style={{ color: "var(--primary-glow)" }} />
-            </div>
-            <div className="flex-1">
-                <p className="text-xs mb-1" style={{ color: "var(--text-soft)" }}>
-                    {label}
-                </p>
-                <p className="text-sm font-medium" style={{ color: "var(--text)" }}>
-                    {value}
-                </p>
-            </div>
-        </motion.div>
-    );
-};
+const inputClass =
+    "w-full rounded-lg border border-line bg-card px-4 py-3 text-sm text-ink placeholder:text-faint transition-colors focus:border-accent focus:outline-none";
 
 export default function Contact() {
-    const { contact } = userData;
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-    });
+    const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+    const [status, setStatus] = useState("idle"); // idle | sending | sent | error
 
-    const [status, setStatus] = useState({ type: "", message: "" });
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSubmit = async (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
-        setIsSubmitting(true);
-        setStatus({ type: "", message: "" });
-
+        setStatus("sending");
         try {
-            const response = await fetch("/api/contact", {
+            const res = await fetch("/api/contact", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
             });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setStatus({
-                    type: "success",
-                    message: "Message sent successfully! I'll get back to you soon.",
-                });
-                setFormData({ name: "", email: "", subject: "", message: "" });
-            } else {
-                setStatus({
-                    type: "error",
-                    message: data.error || "Something went wrong. Please try again.",
-                });
-            }
-        } catch (error) {
-            setStatus({
-                type: "error",
-                message: "Failed to send message. Please try emailing directly.",
-            });
-        } finally {
-            setIsSubmitting(false);
+            if (!res.ok) throw new Error("send failed");
+            setStatus("sent");
+            setForm({ name: "", email: "", subject: "", message: "" });
+        } catch {
+            setStatus("error");
         }
-    };
+    }
 
     return (
-        <section id="contact" className="min-h-screen py-20 px-6 pt-24 relative overflow-hidden">
-            <div className="max-w-7xl mx-auto">
-                {/* Header */}
-                <motion.div
-                    className="text-center py-5 mb-12"
-                    initial={{ opacity: 0, y: -20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <h2 className="text-5xl md:text-6xl font-bold mb-4">
-                        <span className="text-transparent bg-clip-text" style={{ backgroundImage: "var(--gradient)" }}>
-                            {contact.title}
-                        </span>
-                    </h2>
-                    <div className="w-24 h-1 rounded-full mx-auto mb-6" style={{ backgroundImage: "var(--gradient)" }} />
-                    <p className="text-lg max-w-2xl mx-auto" style={{ color: "var(--text-soft)" }}>
-                        {contact.subtitle}
-                    </p>
-                </motion.div>
+        <section id="contact" className="scroll-mt-24">
+            <SectionIntro title="Contact" />
 
-                <div className="grid lg:grid-cols-2 gap-12 items-start">
-                    {/* Left Side */}
-                    <motion.div
-                        className="space-y-10"
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        {/* Avatar */}
-                        <motion.div
-                            className="w-75 h-75 mx-auto rounded-2xl overflow-hidden border shadow-lg"
-                            style={{
-                                borderColor: "rgba(59, 130, 246, 0.3)",
-                                boxShadow: "0 0 30px rgba(59, 130, 246, 0.2)",
-                            }}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
+            <div className="mx-auto grid max-w-6xl gap-10 px-6 pb-16 pt-6 sm:gap-16 sm:pb-20 sm:pt-10 lg:grid-cols-2 lg:pb-28">
+                {/* Left — pitch */}
+                <div>
+                    <Reveal>
+                        <p className="display text-4xl text-ink sm:text-5xl">
+                            Let's build something that{" "}
+                            <span className="font-serif-accent text-accent">thinks.</span>
+                        </p>
+                    </Reveal>
+                    <Reveal delay={0.1}>
+                        <p className="mt-6 max-w-md leading-relaxed text-muted">{userData.contact.sub}</p>
+                    </Reveal>
+
+                    <Reveal delay={0.18}>
+                        <a
+                            href={`mailto:${userData.email}`}
+                            className="link-sweep mt-10 inline-block pb-1 font-mono text-lg text-ink transition-colors hover:text-accent sm:text-xl"
                         >
-                            <img
-                                src="/images/avatar.png"
-                                alt="Avatar"
-                                className="w-full h-full object-cover"
-                            />
-                        </motion.div>
+                            {userData.email}
+                        </a>
+                    </Reveal>
 
-                        {/* Info Cards */}
-                        <div className="space-y-4">
-                            <InfoCard icon={Mail} label="Email" value={contact.email} />
-                            <InfoCard icon={Phone} label="Phone" value={contact.phone} />
-                            <InfoCard icon={MapPin} label="Location" value={contact.location} />
-                        </div>
-                    </motion.div>
-
-                    {/* Right Side - Contact Form */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Inputs */}
-                            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                                <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-soft)" }}>
-                                    Your Name *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl border outline-none transition-all"
-                                    style={{
-                                        backgroundColor: "var(--card)",
-                                        borderColor: "rgba(59, 130, 246, 0.2)",
-                                        color: "var(--text)",
-                                    }}
-                                />
-                            </motion.div>
-
-                            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                                <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-soft)" }}>
-                                    Your Email *
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl border outline-none transition-all"
-                                    style={{
-                                        backgroundColor: "var(--card)",
-                                        borderColor: "rgba(59, 130, 246, 0.2)",
-                                        color: "var(--text)",
-                                    }}
-                                />
-                            </motion.div>
-
-                            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                                <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-soft)" }}>
-                                    Subject *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="subject"
-                                    value={formData.subject}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl border outline-none transition-all"
-                                    style={{
-                                        backgroundColor: "var(--card)",
-                                        borderColor: "rgba(59, 130, 246, 0.2)",
-                                        color: "var(--text)",
-                                    }}
-                                />
-                            </motion.div>
-
-                            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                                <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-soft)" }}>
-                                    Message *
-                                </label>
-                                <textarea
-                                    name="message"
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    required
-                                    rows={6}
-                                    className="w-full px-4 py-3 rounded-xl border outline-none transition-all resize-none"
-                                    style={{
-                                        backgroundColor: "var(--card)",
-                                        borderColor: "rgba(59, 130, 246, 0.2)",
-                                        color: "var(--text)",
-                                    }}
-                                />
-                            </motion.div>
-
-                            {/* Status */}
-                            {status.message && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="p-4 rounded-xl flex items-center gap-3"
-                                    style={{
-                                        backgroundColor:
-                                            status.type === "success"
-                                                ? "rgba(34, 197, 94, 0.1)"
-                                                : "rgba(239, 68, 68, 0.1)",
-                                        borderColor:
-                                            status.type === "success"
-                                                ? "rgba(34, 197, 94, 0.3)"
-                                                : "rgba(239, 68, 68, 0.3)",
-                                    }}
-                                >
-                                    {status.type === "success" ? (
-                                        <CheckCircle className="w-5 h-5" style={{ color: "#22c55e" }} />
-                                    ) : (
-                                        <XCircle className="w-5 h-5" style={{ color: "#ef4444" }} />
-                                    )}
-                                    <p className="text-sm">{status.message}</p>
-                                </motion.div>
-                            )}
-
-                            {/* Submit Button */}
-                            <motion.button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="w-full px-8 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                                style={{
-                                    background: "var(--gradient)",
-                                    color: "white",
-                                }}
-                                whileHover={{ scale: isSubmitting ? 1 : 1.02, boxShadow: "var(--glow-1)" }}
-                                whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.5 }}
-                            >
-                                {isSubmitting ? (
-                                    <>
-                                        <motion.div
-                                            className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                                            animate={{ rotate: 360 }}
-                                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                        />
-                                        Sending...
-                                    </>
-                                ) : (
-                                    <>
-                                        Send Message
-                                        <Send className="w-5 h-5" />
-                                    </>
-                                )}
-                            </motion.button>
-                        </form>
-                    </motion.div>
+                    <Reveal delay={0.26}>
+                        <ul className="mt-12 space-y-4">
+                            {userData.contact.socials.map((s) => (
+                                <li key={s.name}>
+                                    <a
+                                        href={s.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group flex items-center justify-between border-b border-line pb-4 transition-colors hover:border-line-strong"
+                                    >
+                                        <span className="text-sm text-ink">{s.name}</span>
+                                        <span className="flex items-center gap-2 font-mono text-xs text-muted transition-colors group-hover:text-accent">
+                                            {s.handle}
+                                            <ArrowUpRight size={14} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                                        </span>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </Reveal>
                 </div>
 
-                {/* Floating Decorative Elements */}
-                <motion.div
-                    className="absolute top-20 right-10 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none"
-                    style={{ background: "var(--gradient)" }}
-                    animate={{
-                        y: [0, -20, 0],
-                        scale: [1, 1.1, 1],
-                    }}
-                    transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
-                />
+                {/* Right — form */}
+                <Reveal delay={0.15}>
+                    <form onSubmit={handleSubmit} className="space-y-4" aria-label="Contact form">
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label htmlFor="contact-name" className="mono-label mb-2 block">Name</label>
+                                <input
+                                    id="contact-name" type="text" required value={form.name}
+                                    onChange={update("name")} placeholder="Ada Lovelace"
+                                    className={inputClass} autoComplete="name"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="contact-email" className="mono-label mb-2 block">Email</label>
+                                <input
+                                    id="contact-email" type="email" required value={form.email}
+                                    onChange={update("email")} placeholder="you@company.com"
+                                    className={inputClass} autoComplete="email"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="contact-subject" className="mono-label mb-2 block">Subject</label>
+                            <input
+                                id="contact-subject" type="text" required value={form.subject}
+                                onChange={update("subject")} placeholder="Role, project, or idea"
+                                className={inputClass}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="contact-message" className="mono-label mb-2 block">Message</label>
+                            <textarea
+                                id="contact-message" required rows={6} value={form.message}
+                                onChange={update("message")}
+                                placeholder="What are we building?"
+                                className={`${inputClass} resize-none`}
+                            />
+                        </div>
 
-                <motion.div
-                    className="absolute bottom-20 left-10 w-24 h-24 rounded-full blur-3xl opacity-20 pointer-events-none"
-                    style={{ background: "linear-gradient(135deg, var(--secondary), var(--primary))" }}
-                    animate={{
-                        y: [0, 20, 0],
-                        scale: [1, 1.2, 1],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
-                />
+                        <button
+                            type="submit"
+                            disabled={status === "sending"}
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-medium text-bg transition-all hover:scale-[1.01] disabled:opacity-60 sm:w-auto"
+                        >
+                            {status === "sending" && <Loader2 size={15} className="animate-spin" />}
+                            {status === "sending" ? "Sending…" : "Send message"}
+                        </button>
+
+                        <p role="status" aria-live="polite" className="min-h-5 font-mono text-xs">
+                            {status === "sent" && (
+                                <span className="text-accent">Message received — I'll reply within 24 hours.</span>
+                            )}
+                            {status === "error" && (
+                                <span className="text-red-400">
+                                    Something broke. Email me directly at {userData.email}.
+                                </span>
+                            )}
+                        </p>
+                    </form>
+                </Reveal>
             </div>
         </section>
     );

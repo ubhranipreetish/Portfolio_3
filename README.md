@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Preetish Ubhrani — Portfolio
 
-## Getting Started
+A personal portfolio for an AI/ML engineer and full-stack developer, built as a
+dark, editorial, motion-driven single page. The design language is the in-house
+**"Signal"** system: a near-black canvas, warm bone text, and a single
+chartreuse accent, with an oscilloscope / instrument motif running through the
+interactive sections.
 
-First, run the development server:
+**Live:** _add your Vercel URL here_
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Tech stack
+
+| Area      | Choices                                                                   |
+| --------- | ------------------------------------------------------------------------- |
+| Framework | [Next.js 16](https://nextjs.org) (App Router), React 19                    |
+| Styling   | Tailwind CSS v4                                                            |
+| Motion    | Framer Motion, [Lenis](https://lenis.darkroom.engineering) smooth scroll   |
+| 3D        | three.js + @react-three/fiber (hero scene)                                 |
+| Email     | [Resend](https://resend.com) (contact form API route)                     |
+| Icons     | lucide-react                                                              |
+| Deploy    | Vercel                                                                    |
+
+## Sections
+
+- **Hero** — kinetic name, roles, and value line over a three.js scene
+- **Process** — a four-step scrollytelling pipeline (data → models → agents → products)
+- **Featured Work** — five flagship projects (desktop split-screen index, mobile card deck) with framed key-art posters
+- **Experience** — internship timeline, company-first hierarchy
+- **Capabilities** — "The Trailhead": an editorial index of four disciplines with a sticky readout (desktop) / accordion (mobile)
+- **About**, **Contact** (Resend-backed form), and **Footer**
+
+## Project structure
+
+```
+src/
+├── app/
+│   ├── page.js              # section composition
+│   ├── layout.js            # metadata, fonts, OG tags
+│   ├── globals.css          # "Signal" design tokens + utilities
+│   ├── opengraph-image.js   # generated social share card
+│   ├── icon.svg / *.png     # favicons (signal-pulse mark)
+│   └── api/contact/route.js # Resend email endpoint
+├── components/              # one file per section + shared pieces
+└── config/
+    └── userData.js          # ALL content: bio, work, experience, capabilities…
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To edit any copy, project, or link, change **`src/config/userData.js`** — the
+components render from it.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Local development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev        # http://localhost:3000
+```
 
-## Learn More
+Other scripts:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build      # production build
+npm run start      # serve the production build
+npm run lint       # eslint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The contact form uses Resend. Create `.env.local`:
 
-## Deploy on Vercel
+```bash
+RESEND_API_KEY=your_key_here
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See `EMAIL_SETUP.md` for the full setup. Env files are git-ignored.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Assets
+
+- Project key art lives in `public/images/projects/` (`*-key.png`).
+- Résumé is served at `/resume.pdf` (`public/resume.pdf`) and linked from the nav.
+
+---
+
+Built with Next.js and Claude Code.

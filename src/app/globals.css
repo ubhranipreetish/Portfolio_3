@@ -1,113 +1,227 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: #0a0f1f;
-    --background-2: #0f172a;
-    --card: #111a2c;
-
-    --primary: #3b82f6;
-    --primary-light: #60a5fa;
-    --primary-glow: #4cc9f0;
-
-    --secondary: #7c3aed;
-    --secondary-dark: #4338ca;
-
-    --text: #e2e8f0;
-    --text-soft: #94a3b8;
-    --text-highlight: #38bdf8;
-
-    --gradient: linear-gradient(135deg, #3b82f6, #4cc9f0, #7c3aed);
-
-    --glow-1: 0 0 20px rgba(59, 130, 246, 0.5);
-    --glow-2: 0 0 35px rgba(76, 201, 240, 0.6);
-    --glow-3: 0 0 45px rgba(124, 58, 237, 0.4);
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-      background: 
-        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.3), transparent 60%),
-        radial-gradient(circle at 90% 40%, rgba(124, 58, 237, 0.35), transparent 70%),
-        radial-gradient(circle at 70% 90%, rgba(76, 201, 240, 0.25), transparent 80%),
-        #0d1117;
-
-      background-attachment: fixed;
-      color: var(--text);
-    
-    color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
-  
-
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--background-2);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--primary), var(--secondary));
-    border-radius: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--primary-light), var(--secondary));
-  }
+/* ─────────────────────────────────────────────────────────────
+   Design tokens — "Signal" system
+   Near-black canvas · warm bone text · chartreuse signal accent
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg: #0a0a0c;
+  --bg-elev: #111114;
+  --bg-card: #131318;
+  --line: rgba(235, 235, 225, 0.09);
+  --line-strong: rgba(235, 235, 225, 0.18);
+  --text: #ebebe3;
+  --muted: #8e8e85;
+  --faint: #5b5b54;
+  --accent: #c9f24b;
+  --accent-dim: rgba(201, 242, 75, 0.14);
+  --serif: var(--font-serif), Georgia, serif;
 }
 
-/* Animations */
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-20px);
-  }
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-card: var(--bg-card);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
-@keyframes glow {
-
-  0%,
-  100% {
-    box-shadow: var(--glow-1);
-  }
-
-  50% {
-    box-shadow: var(--glow-2);
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
 }
 
-/* Utility Classes */
-@layer utilities {
-  .glassmorphism {
-    background: rgba(17, 26, 44, 0.4);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans), -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
 
-  .text-gradient {
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+::selection {
+  background: var(--accent);
+  color: #0a0a0c;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #2a2a2e; border-radius: 5px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: #3a3a40; }
+
+/* Visible focus for keyboard users — never remove, only style */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ─── Texture: film grain over everything ─── */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 90;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ─── Typographic utilities ─── */
+.font-serif-accent {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.mono-label {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.display {
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1.5px rgba(235, 235, 225, 0.5);
+  color: transparent;
+}
+
+/* ─── Hero dot grid ─── */
+.dot-grid {
+  background-image: radial-gradient(rgba(235, 235, 225, 0.13) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 30%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 30%, black 30%, transparent 75%);
+}
+
+/* ─── Marquee ─── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 36s linear infinite;
+  will-change: transform;
+}
+
+/* ─── Motif animations (project artwork) ─── */
+@keyframes dashflow {
+  to { stroke-dashoffset: -240; }
+}
+.motif-flow {
+  stroke-dasharray: 5 7;
+  animation: dashflow 9s linear infinite;
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+.motif-pulse { animation: pulse-soft 3.2s ease-in-out infinite; }
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.motif-spin {
+  animation: spin-slow 40s linear infinite;
+  transform-origin: center;
+}
+
+/* ─── Hero entrance — pure CSS so the first paint never depends on JS ─── */
+@keyframes hero-rise {
+  from { transform: translateY(110%); }
+  to   { transform: translateY(0); }
+}
+@keyframes hero-fade {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-rise { animation: hero-rise 1s cubic-bezier(0.76, 0, 0.24, 1) both; }
+.anim-fade { animation: hero-fade 0.9s cubic-bezier(0.21, 0.47, 0.32, 0.98) both; }
+
+/* ─── Upgraded motif frame (project artwork) ─── */
+.motif-frame {
+  background:
+    radial-gradient(130% 110% at 50% 0%, rgba(201, 242, 75, 0.07), transparent 62%),
+    var(--bg-card);
+  background-image:
+    radial-gradient(130% 110% at 50% 0%, rgba(201, 242, 75, 0.07), transparent 62%),
+    radial-gradient(rgba(235, 235, 225, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 22px 22px;
+}
+/* Make the accent (animated) strokes glow — only inside the upgraded frame */
+.motif-frame .motif-flow,
+.motif-frame .motif-pulse {
+  filter: drop-shadow(0 0 5px rgba(201, 242, 75, 0.55));
+}
+
+/* ─── Status dot ─── */
+@keyframes ping-dot {
+  0% { transform: scale(1); opacity: 0.7; }
+  80%, 100% { transform: scale(2.6); opacity: 0; }
+}
+.status-ping::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: var(--accent);
+  animation: ping-dot 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ─── Link underline sweep ─── */
+.link-sweep {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-sweep:hover { background-size: 100% 1px; }
+
+/* ─── Archive row hover ─── */
+.archive-row {
+  transition: background-color 0.25s ease, padding-left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.archive-row:hover {
+  background-color: rgba(235, 235, 225, 0.03);
+  padding-left: 0.75rem;
+}
+
+/* ─── Reduced motion: kill the theatrics ─── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquee-track,
+  .motif-flow,
+  .motif-pulse,
+  .motif-spin,
+  .status-ping::before {
+    animation: none !important;
+  }
+  /* entrance animations resolve instantly to their end state */
+  .anim-rise,
+  .anim-fade {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
   }
 }

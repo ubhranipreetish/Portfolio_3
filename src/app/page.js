@@ -1,23 +1,31 @@
-"use client";
-
+import SmoothScroll from "@/components/SmoothScroll";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import Pipeline from "@/components/Pipeline";
+import WorkSection from "@/components/WorkSection";
+// import ProjectSphere from "@/components/ProjectSphere"; // 3D sphere — disabled for now
+import Experience from "@/components/Experience";
+import Capabilities from "@/components/Capabilities";
 import About from "@/components/About";
-import Projects from "@/components/Projects";
-import Services from "@/components/Services";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <>
+      <SmoothScroll />
       <Navbar />
-      <Hero />
-      <About />
-      <Projects />
-      <Services />
-      <Contact />
+      <main id="main">
+        <Hero />
+        <Pipeline />
+        <WorkSection />
+        {/* <ProjectSphere /> */}
+        <Experience />
+        <Capabilities />
+        <About />
+        <Contact />
+      </main>
       <Footer />
-    </div>
+    </>
   );
 }
